@@ -11,7 +11,8 @@ public:
   virtual bool is_output() { return true; }
 
   void write(PmEvent *buf, int len);
-  void write_midi(uint8_t byte1, uint8_t byte2, uint8_t byte3);
+  void write(PmMessage msg);
+  void write(uint8_t byte1, uint8_t byte2, uint8_t byte3);
 
 protected:
   mutex output_mutex;

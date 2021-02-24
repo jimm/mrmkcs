@@ -4,11 +4,12 @@
 #include <set>
 #include <pthread.h>
 #include <portmidi.h>
+#include "observable.h"
 
 class Output;
 class SequencePlayer;
 
-class Clock {
+class Clock : public Observable {
 public:
   std::vector<Output *> &outputs;
   unsigned long microsecs_per_tick;
@@ -26,14 +27,10 @@ public:
   bool is_running() { return thread != nullptr; }
   inline long time() { return _ticks_since_start; }
 
-  void add_player(SequencePlayer *seq_player);
-  void remove_player(SequencePlayer *seq_player);
-
 protected:
   float _bpm;
   long _ticks_since_start;
   pthread_t thread;
-  std::set<SequencePlayer *> players;
 
   void send(PmMessage msg);
   void start_or_continue(PmMessage msg);

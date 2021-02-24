@@ -12,7 +12,7 @@ SequencePlayer::SequencePlayer(Sequence &s, SequencePlayer *c, int transpose, in
 }
 
 SequencePlayer::~SequencePlayer() {
-  clock.remove_player(this);
+  clock.remove_observer(this);
 }
 
 void SequencePlayer::play() {
@@ -28,7 +28,7 @@ void SequencePlayer::play() {
   waiting_until = clock.time() + curr_event->tick_offset;
 
   // remove_player gets called from MrMKCS::cleanup().
-  clock.add_player(this);
+  clock.add_observer(this);
 }
 
 void SequencePlayer::stop() {
@@ -36,6 +36,10 @@ void SequencePlayer::stop() {
   cleanup_notes_and_controllers();
   for (auto child : children)
     child->stop();
+}
+
+void SequencePlayer::update(Observable *o, void *arg) {
+  tick(*(long *)arg);
 }
 
 void SequencePlayer::tick(long time) {
@@ -123,7 +127,7 @@ void SequencePlayer::done_playing() {
   if (tell_parent_when_done && parent != nullptr)
     parent->return_from_wait(this);
   state = sps_finished;
-  MrMKCS_instance()->register_for_cleanup(this);
+  MrMKCS_instance()->register_player_for_cleanup(this);
 }
 
 // ================ cleanup ================

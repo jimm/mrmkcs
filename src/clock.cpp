@@ -3,7 +3,6 @@
 #include <signal.h>
 #include "clock.h"
 #include "output.h"
-#include "sequence_player.h"
 
 #define MICROSECS_PER_SECOND 1000000
 
@@ -110,12 +109,11 @@ void Clock::stop() {
   thread = nullptr;
 }
 
-// Sends CLOCK_MESSAGE and calls players' `tick`.
+// Sends CLOCK_MESSAGE and sends update to observers.
 void Clock::tick() {
   ++_ticks_since_start;
   send(CLOCK_MESSAGE);
-  for (auto sp : players)
-    sp->tick(_ticks_since_start);
+  changed(&_ticks_since_start);
 }
 
 void Clock::send(PmMessage msg) {
@@ -132,12 +130,4 @@ void Clock::start_or_continue(PmMessage msg) {
   send(msg);
   int status = pthread_create(&thread, 0, clock_send_thread, this);
   // TODO check status
-}
-
-void Clock::add_player(SequencePlayer *seq_player) {
-  players.insert(seq_player);
-}
-
-void Clock::remove_player(SequencePlayer *seq_player) {
-  players.erase(seq_player);
 }

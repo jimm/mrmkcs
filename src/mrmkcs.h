@@ -12,6 +12,7 @@ class Input;
 class Output;
 class Song;
 class SequencePlayer;
+class SequenceRecorder;
 
 class MrMKCS {
 public:
@@ -47,17 +48,22 @@ public:
   void set_clock_bpm(int bpm);
 
   // ================ memory_management ================
-  void register_for_cleanup(SequencePlayer *sp);
+  void register_player_for_cleanup(SequencePlayer *sp);
+  void register_recorder_for_cleanup(SequenceRecorder *rec);
+  void register_recorder(SequenceRecorder *rec);
 
   // ================ testing only ================
-  void add_input(Output *output) { _outputs.push_back(output); }
+  void add_input(Input *input) { _inputs.push_back(input); }
   void add_output(Output *output) { _outputs.push_back(output); }
 
 private:
   vector<Input *> _inputs;
   vector<Output *> _outputs;
   set<SequencePlayer *> _finished_sequence_players;
+  set<SequenceRecorder *> _finished_sequence_recorders;
+  SequenceRecorder *_recorder;
   mutex _finished_sequence_players_mutex;
+  mutex _finished_sequence_recorders_mutex;
   Clock _clock;
   bool _running;
   bool _testing;

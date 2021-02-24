@@ -62,7 +62,7 @@ TEST_CASE("clock time correct and sent to players", CATCH_CATEGORY) {
   auto seq = mrm->song()->sequence(0);
   TestClockListener player(seq);
 
-  clock.add_player(&player);
+  clock.add_observer(&player);
 
   REQUIRE(clock.time() == 0);
   REQUIRE(player.time() == 0);

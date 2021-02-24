@@ -16,7 +16,7 @@ public:
 
   virtual bool is_input() { return true; }
 
-  inline bool is_running() { return _running; }
+  inline bool is_running() { return running; }
 
   void start();
   void stop();
@@ -30,8 +30,7 @@ protected:
   virtual bool start_midi();
 
 private:
-  bool _running;
-
+  bool running;
   queue<PmMessage> message_queue;
   mutex message_queue_mutex;
   pthread_t read_pthread;

@@ -16,7 +16,9 @@ public:
 
   Event();
   Event(const Event &other);
-  Event(uint16_t tick_offset, Output *output, uint8_t status, uint8_t data1, uint8_t data2, bool wait);
+  Event(uint16_t tick_offset, Output *output, uint8_t status, uint8_t data1, uint8_t data2);
+  Event(uint16_t tick_offset, Output *output, PmMessage msg);
+  Event(uint8_t tick_offset, int sequence_number, int transpose, int repeats, bool wait);
 
   inline bool is_midi() { return status >= 0x80; }
   inline bool is_sequence() { return status <= 35; }

@@ -3,7 +3,7 @@
 
 #include "clock.h"
 #include "sequence.h"
-#include "sequence_player.h"
+#include "observer.h"
 
 enum SequencePlayerState {
   sps_stopped,
@@ -11,7 +11,7 @@ enum SequencePlayerState {
   sps_finished
 };
 
-class SequencePlayer {
+class SequencePlayer : public Observer {
 public:
   SequencePlayer(Sequence &seq, SequencePlayer *parent, int transpose, int repeats, bool parent_waiting);
   virtual ~SequencePlayer();    // virtual for testing
@@ -20,6 +20,8 @@ public:
   void stop();
   virtual void tick(long time); // virtual for testing
   void return_from_wait(SequencePlayer *child);
+
+  virtual void update(Observable *o, void *arg);
 
 private:
   Clock &clock;

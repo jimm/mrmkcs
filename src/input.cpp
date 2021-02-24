@@ -72,7 +72,7 @@ void *read_thread(void *in_voidptr) {
 
 
 Input::Input(PmDeviceID device_id, const char *device_name, const char *name)
-  : Instrument(device_id, device_name, name), _running(false), read_pthread(nullptr)
+  : Instrument(device_id, device_name, name), running(false), read_pthread(nullptr)
 {
 }
 
@@ -102,7 +102,7 @@ void Input::start() {
   // hasn't started yet.
   inputs.insert(this);
 
-  _running = true;
+  running = true;
   status = pthread_create(&read_pthread, 0, read_thread, this);
   if (status != 0) {
     char buf[BUFSIZ];
@@ -116,7 +116,7 @@ void Input::start() {
 // Sets `running` to `false`, which will cause the `read_thread` for this
 // Input to exit. Also removes the Input from `inputs`.
 void Input::stop() {
-  _running = false;
+  running = false;
   read_pthread = 0;
   inputs_mutex.lock();
   for (set<Input *>::iterator i = inputs.begin(); i != inputs.end(); ++i) {

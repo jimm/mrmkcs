@@ -15,12 +15,25 @@ Event::Event(const Event &other)
 }
 
 Event::Event(uint16_t _tick_offset, Output *_output,
-             uint8_t _status, uint8_t _data1, uint8_t _data2, bool _wait)
+             uint8_t _status, uint8_t _data1, uint8_t _data2)
   : tick_offset(_tick_offset), output(_output),
-    status(_status), data1(_data1), data2(_data2), wait(_wait)
+    status(_status), data1(_data1), data2(_data2), wait(false)
+{
+}
+
+Event::Event(uint16_t _tick_offset, Output *_output, PmMessage msg)
+  : tick_offset(_tick_offset), output(_output),
+    status(Pm_MessageStatus(msg)), data1(Pm_MessageData1(msg)), data2(Pm_MessageData2(msg)),
+    wait(false)
+{
+}
+
+Event::Event(uint8_t _tick_offset, int sequence_number, int transpose, int repeats, bool _wait)
+  : tick_offset(_tick_offset), output(nullptr), status((uint8_t)sequence_number),
+    data1((uint8_t)transpose), data2((uint8_t)repeats), wait(_wait)
 {
 }
 
 void Event::send() {
-  output->write_midi(status, data1, data2);
+  output->write(status, data1, data2);
 }

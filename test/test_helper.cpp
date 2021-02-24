@@ -6,7 +6,6 @@ PmMessage CLOCK_MESSAGE = Pm_Message(CLOCK, 0, 0);
 MrMKCS *create_test_data() {
   int seq_num;
   Output *output;
-
   MrMKCS *mrm = new MrMKCS();
   Song *song = new Song();
 
@@ -21,17 +20,17 @@ MrMKCS *create_test_data() {
   mrm->add_output(output);
 
   // major chord at time 0
-  seq_a.events.push_back(new Event(0, output, NOTE_ON + 0, 64, 127, false));
-  seq_a.events.push_back(new Event(0, output, NOTE_ON + 0, 68, 99, false));
-  seq_a.events.push_back(new Event(0, output, NOTE_ON + 0, 71, 127, false));
+  seq_a.events.push_back(new Event(0, output, NOTE_ON + 0, 64, 127));
+  seq_a.events.push_back(new Event(0, output, NOTE_ON + 0, 68, 99));
+  seq_a.events.push_back(new Event(0, output, NOTE_ON + 0, 71, 127));
   // sustain pedal on at the same time
-  seq_a.events.push_back(new Event(0, output, CONTROLLER + 0, CC_SUSTAIN, 127, false));
+  seq_a.events.push_back(new Event(0, output, CONTROLLER + 0, CC_SUSTAIN, 127));
   // notes offs two beats later
-  seq_a.events.push_back(new Event(48, output, NOTE_OFF + 0, 64, 127, false));
-  seq_a.events.push_back(new Event(0, output, NOTE_OFF + 0, 68, 127, false));
-  seq_a.events.push_back(new Event(0, output, NOTE_OFF + 0, 71, 64, false));
+  seq_a.events.push_back(new Event(48, output, NOTE_OFF + 0, 64, 127));
+  seq_a.events.push_back(new Event(0, output, NOTE_OFF + 0, 68, 127));
+  seq_a.events.push_back(new Event(0, output, NOTE_OFF + 0, 71, 64));
   // sustain pedal off one beat later
-  seq_a.events.push_back(new Event(24, output, CONTROLLER + 0, CC_SUSTAIN, 0, false));
+  seq_a.events.push_back(new Event(24, output, CONTROLLER + 0, CC_SUSTAIN, 0));
 
   // ==== seq B: bass note
   seq_num = char_to_seq_number('B');
@@ -41,8 +40,8 @@ MrMKCS *create_test_data() {
   mrm->add_output(output);
 
   // note on for four beats, then note off (note on, velocity zero)
-  seq_b.events.push_back(new Event(0, output, NOTE_ON + 1, 40, 127, false));
-  seq_b.events.push_back(new Event(96, output, NOTE_ON + 1, 40, 0, false));
+  seq_b.events.push_back(new Event(0, output, NOTE_ON + 1, 40, 127));
+  seq_b.events.push_back(new Event(96, output, NOTE_ON + 1, 40, 0));
 
   // ==== seq P: programs
   seq_num = char_to_seq_number('P');
@@ -50,28 +49,28 @@ MrMKCS *create_test_data() {
   seq_p.name = "Programs";
 
   seq_p.events.push_back(new Event(0, seq_a.events[0]->output,
-                                    PROGRAM_CHANGE + 0, 42, 0, false));
+                                    PROGRAM_CHANGE + 0, 42, 0));
   seq_p.events.push_back(new Event(0, seq_b.events[0]->output,
-                                    PROGRAM_CHANGE + 1, 99, 0, false));
+                                    PROGRAM_CHANGE + 1, 99, 0));
 
   // ==== seq X: xposed seq A
   seq_num = char_to_seq_number('X');
   Sequence &seq_x = song->sequence(seq_num);
   seq_x.name = "Transposed Sequence A";
-  // send program changes
-  seq_x.events.push_back(new Event(0, nullptr, char_to_seq_number('A'), 12, 1, false));
+  // play sequence A once
+  seq_x.events.push_back(new Event(0, char_to_seq_number('A'), 12, 1, false));
 
   // ==== seq S: song
   seq_num = char_to_seq_number('S');
   Sequence &seq = song->sequence(seq_num);
   seq.name = "Song";
   // send program changes
-  seq.events.push_back(new Event(0, nullptr, char_to_seq_number('P'), 0, 1, false));
+  seq.events.push_back(new Event(0, char_to_seq_number('P'), 0, 1, false));
   // play A and B twice, waiting for B to finish
-  seq.events.push_back(new Event(0, nullptr, char_to_seq_number('A'), 0, 2, false));
-  seq.events.push_back(new Event(0, nullptr, char_to_seq_number('B'), 0, 2, true));
-  // Play B one more time
-  seq.events.push_back(new Event(0, nullptr, char_to_seq_number('B'), 0, 1, false));
+  seq.events.push_back(new Event(0, char_to_seq_number('A'), 0, 2, false));
+  seq.events.push_back(new Event(0, char_to_seq_number('B'), 0, 2, true));
+  // play B one more time
+  seq.events.push_back(new Event(0, char_to_seq_number('B'), 0, 1, false));
 
   return mrm;
 }

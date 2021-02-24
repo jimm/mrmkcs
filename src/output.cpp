@@ -37,20 +37,14 @@ void Output::write(PmEvent *buf, int len) {
   handle_error(err);
 }
 
-void Output::write_midi(uint8_t byte1, uint8_t byte2, uint8_t byte3) {
-  PmMessage message = Pm_Message(byte1, byte2, byte3);
-  if (!real_port()) {
-    io_messages[num_io_messages++] = message;
-    return;
-  }
+void Output::write(PmMessage msg) {
+  PmEvent event = {msg, 0};
+  write(&event, 1);
+}
 
-  if (!enabled)
-    return;
-
-  output_mutex.lock();
-  PmError err = Pm_WriteShort(stream, 0, message);
-  output_mutex.unlock();
-  handle_error(err);
+void Output::write(uint8_t byte1, uint8_t byte2, uint8_t byte3) {
+  PmEvent event = {Pm_Message(byte1, byte2, byte3), 0};
+  write(&event, 1);
 }
 
 void Output::handle_error(PmError err) {
