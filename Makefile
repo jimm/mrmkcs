@@ -1,11 +1,11 @@
 NAME = mrmkcs
-DEBUG = -DDEBUG -DDEBUG_STDERR -DMALLOC_DEBUG
+# DEBUG = -DDEBUG -DDEBUG_STDERR
 
-MACOS_VER = 10.14
-CPPFLAGS += -std=c++17 -mmacosx-version-min=$(MACOS_VER) -MD -MP -g $(DEBUG)
+CPP = clang++
+CPPFLAGS += -std=c++17 -MD -MP -g $(DEBUG)
 
-LIBS = -lc -lc++ -lncurses -lportmidi
-LDFLAGS += $(LIBS) -macosx_version_min $(MACOS_VER)
+LIBS = -lc++ -lncurses -lportmidi
+LDFLAGS += $(LIBS)
 
 prefix = /usr/local
 exec_prefix = $(prefix)

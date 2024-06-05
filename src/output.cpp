@@ -15,7 +15,7 @@ bool Output::start_midi() {
     return true;
 
   char buf[BUFSIZ];
-  sprintf(buf, "error opening output stream %s: %s\n", name.c_str(),
+  snprintf(buf, BUFSIZ, "error opening output stream %s: %s\n", name.c_str(),
           Pm_GetErrorText(err));
   error_message(buf);
   return false;
@@ -43,7 +43,7 @@ void Output::write(PmMessage msg) {
 }
 
 void Output::write(uint8_t byte1, uint8_t byte2, uint8_t byte3) {
-  PmEvent event = {Pm_Message(byte1, byte2, byte3), 0};
+  PmEvent event = {(PmMessage)Pm_Message(byte1, byte2, byte3), 0};
   write(&event, 1);
 }
 
@@ -52,7 +52,7 @@ void Output::handle_error(PmError err) {
     return;
 
   char err_msg_buf[BUFSIZ];
-  sprintf(err_msg_buf, "error writing MIDI to %s: %s\n",
+  snprintf(err_msg_buf, BUFSIZ, "error writing MIDI to %s: %s\n",
           name.c_str(), Pm_GetErrorText(err));
   error_message(err_msg_buf);
 }
